@@ -13,7 +13,7 @@ public final class HabitContract {
     public static int NO_WALK = 0;
     public static int WALK = 1;
 
-    public HabitContract() {
+    private HabitContract() {
     }
 
     public static abstract class HabitEntry implements BaseColumns {

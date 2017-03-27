@@ -24,7 +24,24 @@ public class MainActivity extends AppCompatActivity {
         habitatOpenHelper = new HabitatOpenHelper(this);
 
         insertData();
-        readData();
+        Cursor cursordata = readData();
+        try {
+            do {
+                Log.e(TAG, "readData: " + cursordata.getCount());
+                Log.e(TAG, "readData: " + cursordata.getPosition());
+                Log.e(TAG, "readData: " + cursordata.getColumnName(cursordata.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_NAME)));
+                Log.e(TAG, "readData: " + cursordata.getColumnName(cursordata.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_AGE)));
+                Log.e(TAG, "readData: " + cursordata.getString(cursordata.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_NAME)));
+                Log.e(TAG, "readData: " + cursordata.getString(cursordata.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_AGE)));
+                Log.e(TAG, "readData: " + cursordata.getString(cursordata.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_TAKE_WATER)));
+                Log.e(TAG, "readData: " + cursordata.getString(cursordata.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_WALK)));
+            }
+            while (cursordata.moveToNext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            cursordata.close();
+        }
 
     }
 
@@ -39,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         db.close();
     }
 
-    private void readData() {
+    private Cursor readData() {
         db = habitatOpenHelper.getWritableDatabase();
         String[] project = {
                 HabitContract.HabitEntry._ID,
@@ -50,23 +67,6 @@ public class MainActivity extends AppCompatActivity {
         };
         Cursor cursor = db.query(HabitContract.HabitEntry.TABLE_NAME, project, null, null, null, null, null);//db.rawQuery("SELECT * FROM " + HabitContract.HabitEntry.TABLE_NAME, null);
         cursor.moveToFirst();
-        try {
-            do {
-
-                Log.e(TAG, "readData: " + cursor.getCount());
-                Log.e(TAG, "readData: " + cursor.getPosition());
-                Log.e(TAG, "readData: " + cursor.getColumnName(cursor.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_NAME)));
-                Log.e(TAG, "readData: " + cursor.getColumnName(cursor.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_AGE)));
-                Log.e(TAG, "readData: " + cursor.getString(cursor.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_NAME)));
-                Log.e(TAG, "readData: " + cursor.getString(cursor.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_AGE)));
-                Log.e(TAG, "readData: " + cursor.getString(cursor.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_TAKE_WATER)));
-                Log.e(TAG, "readData: " + cursor.getString(cursor.getColumnIndex(HabitContract.HabitEntry.COLUMN_NAME_WALK)));
-            }
-            while (cursor.moveToNext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            cursor.close();
-        }
+        return cursor;
     }
 }
